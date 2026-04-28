@@ -17,7 +17,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Normalize incoming data regardless of source (Firebase, direct POST, etc.)\nconst body = $input.first().json.body || $input.first().json;\n\nconst normalized = {\n  timestamp: new Date().toISOString(),\n  name: body.name || body.fullName || body.displayName || 'Unknown',\n  email: body.email || body.emailAddress || '',\n  phone: body.phone || body.phoneNumber || body.whatsapp || '',\n  product_interest: body.product || body.productInterest || body.interest || 'Not specified',\n  message: body.message || body.notes || '',\n  source: body.source || body.referrer || 'Website Form',\n  ip: $input.first().json.headers?.['x-forwarded-for'] || '',\n  raw: JSON.stringify(body)\n};\n\nreturn [{ json: normalized }];"
+        "jsCode": "const body = $input.first().json.body || $input.first().json;\n\nconst normalized = {\n  timestamp: new Date().toISOString(),\n  name: body.name || body.fullName || body.displayName || 'Unknown',\n  email: body.email || body.emailAddress || '',\n  phone: body.phone || body.phoneNumber || body.whatsapp || '',\n  product_interest: body.product || body.productInterest || body.interest || 'Not specified',\n  message: body.message || body.notes || '',\n  source: body.source || body.referrer || 'Website Form',\n  ip: $input.first().json.headers?.['x-forwarded-for'] || '',\n  raw: JSON.stringify(body)\n};\n\nreturn [{ json: normalized }];"
       },
       "id": "a1b2c3d4-0002-0002-0002-000000000002",
       "name": "Normalize Data",
@@ -30,7 +30,7 @@
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "YOUR_GOOGLE_SHEET_ID_HERE",
+          "value": "1wHzrN6fo5oLcwnqJmUT4hSgE492QdSldBPbAjO02cL4",
           "mode": "id"
         },
         "sheetName": {
@@ -61,7 +61,7 @@
     },
     {
       "parameters": {
-        "chatId": "-1001234567890",
+        "chatId": "378061184",
         "text": "=🔔 *New Form Submission — Africa Team*\n\n👤 *Name:* {{ $json.name }}\n📧 *Email:* {{ $json.email }}\n📱 *Phone:* {{ $json.phone }}\n🎯 *Interest:* {{ $json.product_interest }}\n💬 *Message:* {{ $json.message }}\n🌐 *Source:* {{ $json.source }}\n🕒 *Time:* {{ $json.timestamp }}\n\n_Dual-stored in Firebase + Google Sheets ✅_",
         "additionalFields": {
           "parse_mode": "Markdown"
@@ -71,13 +71,7 @@
       "name": "Telegram — Notify Coach",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1,
-      "position": [680, 420],
-      "credentials": {
-        "telegramApi": {
-          "id": "YOUR_TELEGRAM_CREDENTIAL_ID",
-          "name": "AfricaTeamBot"
-        }
-      }
+      "position": [680, 420]
     },
     {
       "parameters": {
@@ -94,50 +88,20 @@
   ],
   "connections": {
     "Webhook — Receive Form Data": {
-      "main": [
-        [
-          {
-            "node": "Normalize Data",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+      "main": [[{ "node": "Normalize Data", "type": "main", "index": 0 }]]
     },
     "Normalize Data": {
-      "main": [
-        [
-          {
-            "node": "Google Sheets — Backup",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Telegram — Notify Coach",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+      "main": [[
+        { "node": "Google Sheets — Backup", "type": "main", "index": 0 },
+        { "node": "Telegram — Notify Coach", "type": "main", "index": 0 }
+      ]]
     },
     "Google Sheets — Backup": {
-      "main": [
-        [
-          {
-            "node": "Respond OK",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+      "main": [[{ "node": "Respond OK", "type": "main", "index": 0 }]]
     }
   },
-  "settings": {
-    "executionOrder": "v1"
-  },
+  "settings": { "executionOrder": "v1" },
   "staticData": null,
-  "meta": {
-    "templateCredsSetupCompleted": false
-  },
+  "meta": { "templateCredsSetupCompleted": false },
   "pinData": {}
 }
