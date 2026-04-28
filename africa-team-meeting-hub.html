@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Africa Team — Online Meetings</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://telegram.org/js/telegram-widget.js?22" async></script>
+<style>
+:root{--bg:#0A0C0F;--bg2:#111418;--bg3:#181C22;--card:#1A1F28;--border:rgba(255,255,255,0.07);--border-hi:rgba(255,255,255,0.14);--amber:#F0A832;--amber-dim:rgba(240,168,50,0.12);--amber-glow:rgba(240,168,50,0.28);--text:#EEE8DC;--muted:#8A8580;--dim:#454040;--green:#3DBE7A;--teal:#2CBFB0;--coral:#E8603C;--purple:#8B6FE8;--blue:#4A9BE8;--r:12px;--rs:8px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,12,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:62px;}
+.nav-logo{display:flex;align-items:center;gap:10px;}
+.nav-brand{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:var(--amber);}
+.nav-brand span{color:var(--text);}
+.nav-links{display:flex;gap:1.6rem;}
+.nav-links a{font-size:13px;color:var(--muted);text-decoration:none;font-weight:500;transition:color .2s;}
+.nav-links a:hover{color:var(--text);}
+.btn-meet{background:#1a73e8;color:#fff;font-size:13px;font-weight:600;padding:8px 16px;border-radius:6px;text-decoration:none;transition:opacity .2s;display:flex;align-items:center;gap:6px;}
+.btn-meet:hover{opacity:.85;}
+.meet-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.5)}}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6rem 2rem 4rem;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:900px;height:600px;background:radial-gradient(ellipse at center top,rgba(240,168,50,0.07) 0%,transparent 70%);pointer-events:none;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--amber-dim);border:1px solid rgba(240,168,50,0.22);border-radius:999px;padding:6px 18px;font-size:12px;font-weight:500;color:var(--amber);font-family:'JetBrains Mono',monospace;letter-spacing:.5px;margin-bottom:1.5rem;animation:fadeUp .8s .1s ease both;}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--amber);animation:pulse 2s infinite;}
+h1{font-family:'Syne',sans-serif;font-size:clamp(2.4rem,6vw,4.2rem);font-weight:800;line-height:1.1;letter-spacing:-2px;margin-bottom:1.4rem;max-width:860px;animation:fadeUp .8s .2s ease both;}
+h1 em{font-style:normal;color:var(--amber);}
+.hero-sub{font-size:1.05rem;color:var(--muted);line-height:1.7;max-width:580px;margin-bottom:2.4rem;animation:fadeUp .8s .3s ease both;}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;animation:fadeUp .8s .4s ease both;}
+.btn-primary{background:var(--amber);color:#1A0F00;font-size:14px;font-weight:600;padding:14px 28px;border-radius:8px;text-decoration:none;border:none;cursor:pointer;transition:transform .15s,box-shadow .15s;box-shadow:0 0 30px var(--amber-glow);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 4px 40px var(--amber-glow);}
+.btn-secondary{background:transparent;color:var(--text);font-size:14px;font-weight:500;padding:13px 28px;border-radius:8px;text-decoration:none;border:1px solid var(--border-hi);cursor:pointer;transition:border-color .2s,background .2s;}
+.btn-secondary:hover{background:rgba(255,255,255,0.04);border-color:var(--amber);}
+.meet-links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:2rem;animation:fadeUp .8s .45s ease both;}
+.meet-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:.85rem 1.3rem;display:flex;align-items:center;gap:10px;text-decoration:none;transition:border-color .2s;}
+.meet-card:hover{border-color:rgba(26,115,232,.5);}
+.meet-card-day{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.5px;}
+.meet-card-name{font-size:13px;font-weight:600;color:var(--text);}
+.countdown-bar{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.4rem 2rem;display:flex;align-items:center;gap:2rem;max-width:640px;width:100%;margin:2rem auto 0;flex-wrap:wrap;justify-content:center;animation:fadeUp .8s .5s ease both;}
+.cd-label{font-size:11px;color:var(--muted);font-weight:500;letter-spacing:1px;}
+.cd-blocks{display:flex;gap:1rem;}
+.cd-block{text-align:center;}
+.cd-num{font-family:'JetBrains Mono',monospace;font-size:2rem;font-weight:500;color:var(--amber);line-height:1;}
+.cd-unit{font-size:10px;color:var(--dim);margin-top:2px;}
+.cd-sep{font-size:1.5rem;color:var(--dim);line-height:2;}
+section{padding:5rem 2rem;max-width:1100px;margin:0 auto;}
+.section-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--amber);letter-spacing:2px;text-transform:uppercase;margin-bottom:.6rem;}
+.section-title{font-family:'Syne',sans-serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;letter-spacing:-1px;margin-bottom:.65rem;}
+.section-sub{font-size:1rem;color:var(--muted);line-height:1.7;max-width:540px;}
+.week-tabs{display:flex;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap;margin-top:2.5rem;}
+.week-tab{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 16px;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;color:var(--muted);}
+.week-tab.active{background:var(--amber-dim);border-color:rgba(240,168,50,.3);color:var(--amber);}
+.agenda-grid{display:flex;flex-direction:column;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.agenda-row{display:grid;grid-template-columns:88px 90px 1fr auto;align-items:center;padding:.85rem 1.2rem;border-bottom:1px solid var(--border);gap:1rem;transition:background .15s;}
+.agenda-row:last-child{border-bottom:none;}
+.agenda-row:hover{background:rgba(255,255,255,.02);}
+.agenda-row.hdr{background:var(--bg3);}
+.agenda-row.hdr .cell{font-size:10px;color:var(--dim);font-weight:500;letter-spacing:.5px;text-transform:uppercase;}
+.time-cell{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--amber);}
+.dur-cell{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);}
+.seg-name{font-weight:600;font-size:14px;}
+.seg-desc{font-size:12px;color:var(--muted);margin-top:2px;}
+.ptag{font-size:11px;font-weight:600;padding:3px 9px;border-radius:4px;white-space:nowrap;font-family:'JetBrains Mono',monospace;}
+.products-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;margin-top:2.5rem;}
+.pc{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.4rem;position:relative;overflow:hidden;transition:border-color .2s,transform .2s;}
+.pc:hover{border-color:var(--border-hi);transform:translateY(-2px);}
+.pc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.pc.ut::before{background:var(--amber);}
+.pc.cv::before{background:var(--teal);}
+.pc.er::before{background:var(--coral);}
+.pc.kf::before{background:var(--green);}
+.pc-icon{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;margin-bottom:.9rem;}
+.pc-name{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;margin-bottom:.3rem;}
+.pc-type{font-size:11px;color:var(--muted);margin-bottom:.85rem;font-family:'JetBrains Mono',monospace;}
+.pc-pitch{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:.85rem;}
+.pc-ref{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--amber);background:var(--amber-dim);padding:5px 9px;border-radius:4px;margin-bottom:.85rem;word-break:break-all;}
+.pc-slot{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);}
+.pc-dot{width:7px;height:7px;border-radius:50%;}
+.pc-link{display:inline-block;margin-top:.9rem;font-size:12px;font-weight:600;padding:7px 13px;border-radius:6px;text-decoration:none;transition:opacity .2s;}
+.pc.ut .pc-link{background:rgba(240,168,50,.15);color:var(--amber);}
+.pc.cv .pc-link{background:rgba(44,191,176,.15);color:var(--teal);}
+.pc.er .pc-link{background:rgba(232,96,60,.15);color:var(--coral);}
+.pc.kf .pc-link{background:rgba(61,190,122,.15);color:var(--green);}
+.pc-link:hover{opacity:.72;}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1rem;margin-top:2.5rem;}
+.stat{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:1.2rem;text-align:center;}
+.stat-num{font-family:'JetBrains Mono',monospace;font-size:1.9rem;font-weight:500;color:var(--amber);}
+.stat-label{font-size:12px;color:var(--muted);margin-top:4px;}
+.telegram-section{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:5rem 2rem;}
+.telegram-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;}
+.tg-info{display:flex;flex-direction:column;gap:1.5rem;}
+.tg-feature{display:flex;align-items:flex-start;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:1.1rem;}
+.tg-feature-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.tg-feature-title{font-size:13px;font-weight:600;margin-bottom:3px;}
+.tg-feature-desc{font-size:12px;color:var(--muted);line-height:1.6;}
+.tg-embed-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.tg-embed-header{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.tg-embed-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#2AABEE,#1c7fb8);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.tg-embed-name{font-size:14px;font-weight:700;}
+.tg-embed-sub{font-size:12px;color:var(--muted);}
+.tg-embed-body{padding:1.25rem;}
+.tg-widget-container{border-radius:8px;overflow:hidden;background:#17212B;}
+.tg-cta-row{display:flex;gap:10px;margin-top:1rem;}
+.btn-tg{background:linear-gradient(135deg,#2AABEE,#1c7fb8);color:#fff;font-size:13px;font-weight:600;padding:10px 18px;border-radius:7px;text-decoration:none;transition:opacity .2s;display:flex;align-items:center;gap:6px;}
+.btn-tg:hover{opacity:.85;}
+.btn-tg-bot{background:rgba(42,171,238,0.12);border:1px solid rgba(42,171,238,0.3);color:#2AABEE;font-size:13px;font-weight:600;padding:10px 18px;border-radius:7px;text-decoration:none;transition:opacity .2s;display:flex;align-items:center;gap:6px;}
+.btn-tg-bot:hover{opacity:.75;}
+.presenter-section{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:5rem 2rem;}
+.presenter-inner{max-width:1100px;margin:0 auto;}
+.dtabs{display:flex;gap:8px;margin-bottom:2rem;flex-wrap:wrap;}
+.dtab{background:var(--bg3);border:1px solid var(--border);padding:9px 20px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500;color:var(--muted);transition:all .2s;}
+.dtab.active{background:var(--card);border-color:var(--border-hi);color:var(--text);}
+.dpanel{display:none;}
+.dpanel.active{display:block;}
+.script-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1rem;}
+.script-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
+.script-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;}
+.script-time{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);}
+.script-body{font-size:13px;line-height:1.8;color:var(--muted);border-left:2px solid var(--border-hi);padding-left:1rem;}
+.script-body strong{color:var(--text);font-weight:500;}
+.script-cue{display:inline-block;background:var(--amber-dim);color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 8px;border-radius:4px;margin:4px 0;}
+.checklist{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.checklist li{display:flex;align-items:flex-start;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:11px 15px;font-size:13px;cursor:pointer;transition:background .15s;}
+.checklist li:hover{background:rgba(255,255,255,.03);}
+.check-box{width:18px;height:18px;border-radius:4px;border:1.5px solid var(--dim);flex-shrink:0;margin-top:1px;transition:all .2s;display:flex;align-items:center;justify-content:center;}
+.checklist li.done .check-box{background:var(--green);border-color:var(--green);}
+.checklist li.done .check-box::after{content:'✓';font-size:10px;color:#0A2018;font-weight:700;}
+.checklist li.done .check-label{text-decoration:line-through;color:var(--muted);}
+.check-label{flex:1;}
+.check-phase{font-size:10px;color:var(--dim);font-family:'JetBrains Mono',monospace;margin-top:2px;}
+.obj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1rem;}
+.obj-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;}
+.obj-q{font-size:13px;font-weight:600;color:var(--coral);margin-bottom:.65rem;}
+.obj-a{font-size:13px;color:var(--muted);line-height:1.7;}
+.template-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-top:2rem;}
+.tc{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;}
+.tmpl-platform{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--amber);letter-spacing:1px;text-transform:uppercase;margin-bottom:.5rem;}
+.tmpl-body{font-size:12px;color:var(--muted);line-height:1.8;white-space:pre-line;}
+.tmpl-copy{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(240,168,50,.2);border-radius:5px;padding:6px 14px;font-size:11px;font-weight:600;cursor:pointer;margin-top:10px;transition:opacity .2s;}
+.tmpl-copy:hover{opacity:.8;}
+.steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-top:2.5rem;}
+.step-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;}
+.step-card.urgent{border-color:rgba(240,168,50,.3);}
+.step-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--amber);letter-spacing:1px;margin-bottom:.5rem;}
+.step-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:.5rem;}
+.step-body{font-size:13px;color:var(--muted);line-height:1.7;}
+.step-badge{display:inline-block;font-size:10px;font-family:'JetBrains Mono',monospace;padding:2px 8px;border-radius:4px;margin-bottom:.5rem;}
+.badge-now{background:rgba(240,168,50,.15);color:var(--amber);}
+.badge-week{background:rgba(44,191,176,.12);color:var(--teal);}
+.badge-month{background:rgba(139,111,232,.12);color:var(--purple);}
+.timer-launch-bar{text-align:center;padding:2rem 2rem 3rem;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.live-timer{position:fixed;bottom:1.5rem;right:1.5rem;z-index:200;background:var(--card);border:1px solid var(--border-hi);border-radius:10px;padding:1rem 1.25rem;display:none;flex-direction:column;gap:4px;box-shadow:0 8px 40px rgba(0,0,0,.6);min-width:200px;}
+.lt-label{font-size:10px;color:var(--amber);font-family:'JetBrains Mono',monospace;letter-spacing:1px;}
+.lt-seg{font-size:13px;font-weight:600;}
+.lt-clock{font-family:'JetBrains Mono',monospace;font-size:1.6rem;color:var(--amber);}
+.lt-nxt{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+.lt-btn{background:var(--amber);color:#1A0F00;border:none;border-radius:5px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;margin-top:6px;}
+.lt-close{position:absolute;top:8px;right:10px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--dim);font-size:13px;}
+.footer-brand{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--amber);margin-bottom:.5rem;}
+.footer-links{display:flex;gap:1.8rem;justify-content:center;flex-wrap:wrap;margin-top:1rem;}
+.footer-links a{color:var(--muted);text-decoration:none;font-size:13px;transition:color .2s;}
+.footer-links a:hover{color:var(--text);}
+@media(max-width:768px){.telegram-inner{grid-template-columns:1fr;}.nav-links{display:none;}.agenda-row{grid-template-columns:70px 1fr;}.dur-cell{display:none;}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-logo">
+    <div class="nav-brand">Africa<span>Team</span></div>
+  </div>
+  <div class="nav-links">
+    <a href="#schedule">Schedule</a>
+    <a href="#products">Products</a>
+    <a href="#telegram">Telegram</a>
+    <a href="#presenter">Presenter</a>
+    <a href="#invites">Invites</a>
+    <a href="#nextsteps">Next Steps</a>
+  </div>
+  <a class="btn-meet" href="https://meet.google.com/piq-wvnj-hrw" target="_blank">
+    <div class="meet-dot"></div>Join Meeting
+  </a>
+</nav>
+<div class="hero" id="home">
+  <div class="hero-badge"><div class="badge-dot"></div>LIVE EVERY TUESDAY &amp; THURSDAY &middot; 8:00 PM EAT</div>
+  <h1>Build Real Income<br/>With <em>Africa Team</em><br/>Online Meetings</h1>
+  <p class="hero-sub">60-minute live sessions every week covering UTrading AI, Coinverse, Eropia DeFi 4.0, and KindFlow &mdash; four income streams, one powerful African community.</p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="https://wa.me/256784277664" target="_blank">Reserve Your Spot &rarr;</a>
+    <a class="btn-secondary" href="https://t.me/Africateambot" target="_blank">Chat @Africateambot</a>
+  </div>
+  <div class="meet-links">
+    <a class="meet-card" href="https://meet.google.com/piq-wvnj-hrw" target="_blank">
+      <span style="font-size:20px">&#128197;</span>
+      <div><div class="meet-card-day">TUESDAY &middot; 8PM EAT &middot; STANDARD SESSION</div><div class="meet-card-name">meet.google.com/piq-wvnj-hrw</div></div>
+    </a>
+    <a class="meet-card" href="https://meet.google.com/etv-grye-hon" target="_blank">
+      <span style="font-size:20px">&#128293;</span>
+      <div><div class="meet-card-day">THURSDAY &middot; 8PM EAT &middot; FOCUS SESSION</div><div class="meet-card-name">meet.google.com/etv-grye-hon</div></div>
+    </a>
+  </div>
+  <div class="countdown-bar">
+    <div class="cd-label">NEXT MEETING IN</div>
+    <div class="cd-blocks">
+      <div class="cd-block"><div class="cd-num" id="cd-d">00</div><div class="cd-unit">DAYS</div></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-block"><div class="cd-num" id="cd-h">00</div><div class="cd-unit">HRS</div></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-block"><div class="cd-num" id="cd-m">00</div><div class="cd-unit">MIN</div></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-block"><div class="cd-num" id="cd-s">00</div><div class="cd-unit">SEC</div></div>
+    </div>
+  </div>
+</div>
+<section id="schedule">
+  <div class="section-label">Meeting Structure</div>
+  <div class="section-title">The 60-Minute Blueprint</div>
+  <p class="section-sub">Tight, high-energy agenda &mdash; all 4 products every Tuesday. Deep dives every Thursday. Maximum impact, zero attention drop-off.</p>
+  <div class="week-tabs">
+    <div class="week-tab active" onclick="showWeek('std',this)">Standard (Tue)</div>
+    <div class="week-tab" onclick="showWeek('ut',this)">UTrading Focus</div>
+    <div class="week-tab" onclick="showWeek('cv',this)">Coinverse Focus</div>
+    <div class="week-tab" onclick="showWeek('er',this)">Eropia Focus</div>
+    <div class="week-tab" onclick="showWeek('kf',this)">KindFlow Focus</div>
+  </div>
+  <div id="week-std" class="agenda-grid">
+    <div class="agenda-row hdr"><div class="cell">Time</div><div class="cell">Duration</div><div class="cell">Segment</div><div class="cell">Tag</div></div>
+    <div class="agenda-row"><div class="time-cell">8:00 PM</div><div class="dur-cell">8 min</div><div><div class="seg-name">Welcome &amp; Energy</div><div class="seg-desc">Attendance &middot; quick poll &middot; agenda preview</div></div><span class="ptag" style="background:rgba(255,255,255,.05);color:#666">OPEN</span></div>
+    <div class="agenda-row"><div class="time-cell">8:08 PM</div><div class="dur-cell">14 min</div><div><div class="seg-name">UTrading AI</div><div class="seg-desc">Live signal demo &middot; weekly results &middot; referral walkthrough</div></div><span class="ptag" style="background:rgba(240,168,50,.15);color:var(--amber)">UTRADING</span></div>
+    <div class="agenda-row"><div class="time-cell">8:22 PM</div><div class="dur-cell">11 min</div><div><div class="seg-name">Coinverse</div><div class="seg-desc">Earning update &middot; new member proof &middot; sign-up demo</div></div><span class="ptag" style="background:rgba(44,191,176,.15);color:var(--teal)">COINVERSE</span></div>
+    <div class="agenda-row"><div class="time-cell">8:33 PM</div><div class="dur-cell">11 min</div><div><div class="seg-name">Eropia DeFi 4.0</div><div class="seg-desc">Staking ROI &middot; NFT mining &middot; wallet walkthrough</div></div><span class="ptag" style="background:rgba(232,96,60,.15);color:var(--coral)">EROPIA</span></div>
+    <div class="agenda-row"><div class="time-cell">8:44 PM</div><div class="dur-cell">11 min</div><div><div class="seg-name">KindFlow</div><div class="seg-desc">Community proof &middot; BSC setup &middot; KindCoin mine-only model</div></div><span class="ptag" style="background:rgba(61,190,122,.15);color:var(--green)">KINDFLOW</span></div>
+    <div class="agenda-row"><div class="time-cell">8:55 PM</div><div class="dur-cell">5 min</div><div><div class="seg-name">Close + Links Drop</div><div class="seg-desc">CTA &middot; all 4 links in chat &middot; replay announced</div></div><span class="ptag" style="background:rgba(255,255,255,.05);color:#666">CLOSE</span></div>
+  </div>
+  <div id="week-ut" class="agenda-grid" style="display:none">
+    <div class="agenda-row hdr"><div class="cell">Time</div><div class="cell">Duration</div><div class="cell">Segment</div><div class="cell">Tag</div></div>
+    <div class="agenda-row"><div class="time-cell">8:00 PM</div><div class="dur-cell">5 min</div><div><div class="seg-name">Welcome</div><div class="seg-desc">Theme: "AI Trading &mdash; This Week's Wins"</div></div><span class="ptag" style="background:rgba(255,255,255,.05);color:#666">OPEN</span></div>
+    <div class="agenda-row"><div class="time-cell">8:05 PM</div><div class="dur-cell">30 min</div><div><div class="seg-name">UTrading AI Deep Dive</div><div class="seg-desc">Live trades &middot; bot setup tutorial &middot; signal reading &middot; full referral walkthrough</div></div><span class="ptag" style="background:rgba(240,168,50,.15);color:var(--amber)">UTRADING</span></div>
+    <div class="agenda-row"><div class="time-cell">8:35 PM</div><div class="dur-cell">10 min</div><div><div class="seg-name">Flash: Coinverse &middot; Eropia &middot; KindFlow</div><div class="seg-desc">Quick updates + referral links for all 3</div></div><span class="ptag" style="background:rgba(255,255,255,.05);color:#666">FLASH</span></div>
+    <div class="agenda-row"><div class="time-cell">8:45 PM</div><div class="dur-cell">15 min</div><div><div class="seg-name">Live Q&amp;A + Sign-up Drive</div><div class="seg-desc">Handle UTrading objections &middot; drive registrations live</div></div><span class="ptag" style="background:rgba(240,168,50,.15);color:var(--amber)">UTRADING</span></div>
+  </div>
+  <div id="week-cv" class="agenda-grid" style="display:none">
+    <div class="agenda-row hdr"><div class="cell">Time</div><div class="cell">Duration</div><div class="cell">Segment</div><div class="cell">Tag</div></div>
+    <div class="agenda-row"><div class="time-cell">8:00 PM</div><div class="dur-cell">5 min</div><div><div class="seg-name">Welcome</div><div class="seg-desc">Theme: "Passive Crypto &mdash; Real Numbers"</div></div><span class="ptag" style="background:rgba(255,255,255,.05);color:#666">OPEN</span></div>
+    <div class="agenda-row"><div class="time-cell">8:05 PM</div><div class="dur-cell">30 min</div><div><div class="seg-name">Coinverse Deep Dive</div><div class="seg-desc">How it works &middot; earnings dashboard &middot; referral power &middot; live registration walkthrough</div></div><span class="ptag" style="background:rgba(44,191,176,.15);color:var(--teal)">COINVERSE</span></div>
+    <div class="agenda-row"><div class="time-cell">8:35 PM</div><div class="dur-cell">10 min</div><div><div class="seg-name">Flash: UTrading &middot; Eropia &middot; KindFlow</div><div class="seg-desc">Quick updates + referral links for all 3</div></div><span class="ptag" style="background:rgba(255,255,255,.05);color:#666">FLASH</span></div>
+    <div class="agenda-row"><div class="time-cell">8:45 PM</div><div class="dur-cell">15 min</div><div><div class="seg-name">Live Q&amp;A + Sign-up Drive</div><div class="seg-desc">Coinverse objections handled &middot; drive registrations</div></div><span class="ptag" style="background:rgba(44,191,176,.15);color:var(--teal)">COINVERSE</span></div>
+  </div>
+  <div id="week-er" class="agenda-grid" style="display:none">
+    <div class="agenda-row hdr"><div class="cell">Time</div><div class="cell">Duration</div><div class="cell">Segment</div><div class="cell">Tag</div></div>
+    <div class="agenda-row"><div class="time-cell">8:00 PM</div><div class="dur-cell">5 min</div><div><div class="seg-name">Welcome</div><div class="seg-desc">Theme: "DeFi Staking &mdash; Africa's New Bank"</div></div><span class="ptag" style="background:rgba(255,255,255,.05);color:#666">OPEN</span></div>
+    <div class="agenda-row"><div class="time-cell">8:05 PM</div><div class="dur-cell">30 min</div><div><div class="seg-name">Eropia DeFi 4.0 Deep Dive</div><div class="seg-desc">Staking mechanics &middot; ROI calculations &middot; NFT mining &middot; wallet connect walkthrough</div></div><span class="ptag" style="background:rgba(232,96,60,.15);color:var(--coral)">EROPIA</span></div>
+    <div class="agenda-row"><div class="time-cell">8:35 PM</div><div class="dur-cell">10 min</div><div><div class="seg-name">Flash: UTrading &middot; Coinverse &middot; KindFlow</div><div class="seg-desc">Quick updates + referral links for all 3</div></div><span class="ptag" style="background:rgba(255,255,255,.05);color:#666">FLASH</span></div>
+    <div class="agenda-row"><div class="time-cell">8:45 PM</div><div class="dur-cell">15 min</div><div><div class="seg-name">Live Q&amp;A + Sign-up Drive</div><div class="seg-desc">Crypto doubts handled &middot; staking + NFT sign-ups</div></div><span class="ptag" style="background:rgba(232,96,60,.15);color:var(--coral)">EROPIA</span></div>
+  </div>
+  <div id="week-kf" class="agenda-grid" style="display:none">
+    <div class="agenda-row hdr"><div class="cell">Time</div><div class="cell">Duration</div><div class="cell">Segment</div><div class="cell">Tag</div></div>
+    <div class="agenda-row"><div class="time-cell">8:00 PM</div><div class="dur-cell">5 min</div><div><div class="seg-name">Welcome</div><div class="seg-desc">Theme: "Community Wealth &mdash; The KindFlow Way"</div></div><span class="ptag" style="background:rgba(255,255,255,.05);color:#666">OPEN</span></div>
+    <div class="agenda-row"><div class="time-cell">8:05 PM</div><div class="dur-cell">30 min</div><div><div class="seg-name">KindFlow Deep Dive</div><div class="seg-desc">BSC P2P mechanics &middot; KindCoin mine-only model &middot; wallet setup &middot; community proof &middot; live join walkthrough</div></div><span class="ptag" style="background:rgba(61,190,122,.15);color:var(--green)">KINDFLOW</span></div>
+    <div class="agenda-row"><div class="time-cell">8:35 PM</div><div class="dur-cell">10 min</div><div><div class="seg-name">Flash: UTrading &middot; Coinverse &middot; Eropia</div><div class="seg-desc">Quick updates + referral links for all 3</div></div><span class="ptag" style="background:rgba(255,255,255,.05);color:#666">FLASH</span></div>
+    <div class="agenda-row"><div class="time-cell">8:45 PM</div><div class="dur-cell">15 min</div><div><div class="seg-name">Live Q&amp;A + Join Drive</div><div class="seg-desc">BSC doubts handled &middot; live on-boarding &middot; referral link shared</div></div><span class="ptag" style="background:rgba(61,190,122,.15);color:var(--green)">KINDFLOW</span></div>
+  </div>
+</section>
+<section id="products">
+  <div class="section-label">The Four Pillars</div>
+  <div class="section-title">Africa Team Income Streams</div>
+  <p class="section-sub">Four products. One 60-minute session. Every attendee finds their entry point.</p>
+  <div class="products-grid">
+    <div class="pc ut">
+      <div class="pc-icon" style="background:rgba(240,168,50,.15)">&#128200;</div>
+      <div class="pc-name">UTrading AI</div>
+      <div class="pc-type">AI Trading Signals &middot; 14 min slot</div>
+      <div class="pc-pitch">AI-powered crypto signals with referral income. Demo live trades, show weekly signals, walk attendees through bot setup on their phones.</div>
+      <div class="pc-ref">utrading.ai/AFRICA &middot; utrading.ai/ref/AFRICA<br/>t.me/uTrading_AI_Bot?start=ref-AFRICA</div>
+      <div class="pc-slot"><div class="pc-dot" style="background:var(--amber)"></div>Slot: 8:08 &ndash; 8:22 PM EAT</div>
+      <a class="pc-link" href="https://utrading.ai/AFRICA" target="_blank">Join UTrading &rarr;</a>
+    </div>
+    <div class="pc cv">
+      <div class="pc-icon" style="background:rgba(44,191,176,.15)">&#8383;</div>
+      <div class="pc-name">Coinverse</div>
+      <div class="pc-type">Crypto Platform &middot; 11 min slot</div>
+      <div class="pc-pitch">Show real earning screenshots, walk through registration live, demonstrate how referrals compound. Numbers sell &mdash; no hype needed.</div>
+      <div class="pc-ref">coinverse-landing.vercel.app</div>
+      <div class="pc-slot"><div class="pc-dot" style="background:var(--teal)"></div>Slot: 8:22 &ndash; 8:33 PM EAT</div>
+      <a class="pc-link" href="https://coinverse-landing.vercel.app" target="_blank">Join Coinverse &rarr;</a>
+    </div>
+    <div class="pc er">
+      <div class="pc-icon" style="background:rgba(232,96,60,.15)">&#9670;</div>
+      <div class="pc-name">Eropia DeFi 4.0</div>
+      <div class="pc-type">DeFi Staking + NFT &middot; 11 min slot</div>
+      <div class="pc-pitch">Show staking ROI with real numbers. Walk through wallet connect and NFT mining. Two ref codes = two income streams per referral you bring.</div>
+      <div class="pc-ref">eropia.finance?ref=AFRICA (Staking)<br/>eropia.finance?ref=U13F93855 (NFT)</div>
+      <div class="pc-slot"><div class="pc-dot" style="background:var(--coral)"></div>Slot: 8:33 &ndash; 8:44 PM EAT</div>
+      <a class="pc-link" href="https://eropia.finance?ref=AFRICA" target="_blank">Join Eropia &rarr;</a>
+    </div>
+    <div class="pc kf">
+      <div class="pc-icon" style="background:rgba(61,190,122,.15)">&#10022;</div>
+      <div class="pc-name">KindFlow</div>
+      <div class="pc-type">BSC P2P + KindCoin &middot; 11 min slot</div>
+      <div class="pc-pitch">Community-powered BSC crowdfunding with mine-only KindCoin. Show the growing community, explain the model, walk through joining live on screen.</div>
+      <div class="pc-ref">user.kindflow.world/register?sponsor=<br/>0x13f93855D5131E0e58eFb9AeB96036ED5a14F077</div>
+      <div class="pc-slot"><div class="pc-dot" style="background:var(--green)"></div>Slot: 8:44 &ndash; 8:55 PM EAT</div>
+      <a class="pc-link" href="https://user.kindflow.world/register?sponsor=0x13f93855D5131E0e58eFb9AeB96036ED5a14F077" target="_blank">Join KindFlow &rarr;</a>
+    </div>
+  </div>
+  <div class="stats-row">
+    <div class="stat"><div class="stat-num">2&times;</div><div class="stat-label">Weekly meetings</div></div>
+    <div class="stat"><div class="stat-num">60</div><div class="stat-label">Minutes per session</div></div>
+    <div class="stat"><div class="stat-num">4</div><div class="stat-label">Income streams</div></div>
+    <div class="stat"><div class="stat-num">5</div><div class="stat-label">Focus rotations</div></div>
+    <div class="stat"><div class="stat-num">8PM</div><div class="stat-label">EAT &middot; Tue + Thu</div></div>
+  </div>
+</section>
+<div class="telegram-section" id="telegram">
+  <div class="telegram-inner">
+    <div class="tg-info">
+      <div class="section-label">Community &amp; Bot</div>
+      <div class="section-title" style="max-width:100%">Africa Team on Telegram</div>
+      <p class="section-sub" style="max-width:100%;margin-bottom:1.5rem">Your Telegram presence is the backbone of Africa Team. The channel broadcasts meetings and replays. The bot handles instant responses so no lead is ever left waiting.</p>
+      <div class="tg-feature">
+        <div class="tg-feature-icon" style="background:rgba(42,171,238,.12)">&#128226;</div>
+        <div><div class="tg-feature-title">@africateamhub Channel</div><div class="tg-feature-desc">Meeting invites, replays, product updates, and referral links &mdash; broadcast automatically to your whole audience.</div></div>
+      </div>
+      <div class="tg-feature">
+        <div class="tg-feature-icon" style="background:rgba(61,190,122,.12)">&#129302;</div>
+        <div><div class="tg-feature-title">@Africateambot &mdash; AI Responder</div><div class="tg-feature-desc">Members type a product name and the bot instantly returns the referral link. No more manually sending links one by one &mdash; the bot works 24/7.</div></div>
+      </div>
+      <div class="tg-feature">
+        <div class="tg-feature-icon" style="background:rgba(240,168,50,.12)">&#9889;</div>
+        <div><div class="tg-feature-title">Instant Meeting Reminders</div><div class="tg-feature-desc">Configure @Africateambot to auto-send the Google Meet link 1 hour before every Tuesday and Thursday session.</div></div>
+      </div>
+      <div class="tg-cta-row">
+        <a class="btn-tg" href="https://t.me/africateamhub" target="_blank">&#128226; Join Channel</a>
+        <a class="btn-tg-bot" href="https://t.me/Africateambot" target="_blank">&#129302; Open Bot</a>
+      </div>
+    </div>
+    <div class="tg-embed-wrap">
+      <div class="tg-embed-header">
+        <div class="tg-embed-avatar">&#129302;</div>
+        <div class="tg-embed-info">
+          <div class="tg-embed-name">@Africateambot</div>
+          <div class="tg-embed-sub">Africa Team Assistant &middot; Online</div>
+        </div>
+      </div>
+      <div class="tg-embed-body">
+        <div class="tg-widget-container" style="margin-bottom:1rem;">
+          <a href="https://t.me/africateamhub" target="_blank"
+             style="display:flex;align-items:center;gap:12px;background:#2AABEE;color:#fff;padding:14px 18px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;transition:opacity .2s;"
+             onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+            Join Africa Team on Telegram
+          </a>
+        </div>
+        <div style="background:#17212B;border-radius:8px;padding:1rem;font-family:'JetBrains Mono',monospace;font-size:12px;">
+          <div style="color:#2AABEE;margin-bottom:8px;font-size:11px;letter-spacing:.5px;">BOT PREVIEW &mdash; @Africateambot</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="background:#2B5278;padding:8px 12px;border-radius:8px 8px 2px 8px;color:#fff;align-self:flex-end;max-width:80%;">kindflow</div>
+            <div style="background:#182533;padding:8px 12px;border-radius:2px 8px 8px 8px;color:#aaa;max-width:90%;">
+              <div style="color:#3DBE7A;font-weight:bold;margin-bottom:4px;">&#10022; KindFlow &mdash; BSC P2P Community</div>
+              <div style="color:#888;font-size:11px;word-break:break-all;">user.kindflow.world/register?sponsor=0x13f93855...</div>
+              <div style="margin-top:6px;"><a href="https://user.kindflow.world/register?sponsor=0x13f93855D5131E0e58eFb9AeB96036ED5a14F077" target="_blank" style="color:#3DBE7A;text-decoration:none;">&#128073; Join KindFlow &rarr;</a></div>
+            </div>
+            <div style="background:#2B5278;padding:8px 12px;border-radius:8px 8px 2px 8px;color:#fff;align-self:flex-end;max-width:80%;">utrading</div>
+            <div style="background:#182533;padding:8px 12px;border-radius:2px 8px 8px 8px;color:#aaa;max-width:90%;">
+              <div style="color:#F0A832;font-weight:bold;margin-bottom:4px;">&#128200; UTrading AI &mdash; Signals</div>
+              <div style="color:#888;font-size:11px;">utrading.ai/AFRICA</div>
+              <div style="margin-top:6px;"><a href="https://utrading.ai/AFRICA" target="_blank" style="color:#F0A832;text-decoration:none;">&#128073; Join UTrading &rarr;</a></div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:1rem;display:flex;gap:8px;flex-wrap:wrap;">
+          <a href="https://t.me/Africateambot" target="_blank" class="btn-tg" style="flex:1;justify-content:center;">Start Chat with Bot</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="presenter-section" id="presenter">
+  <div class="presenter-inner">
+    <div class="section-label">Presenter Dashboard</div>
+    <div class="section-title">Run Every Meeting Like a Pro</div>
+    <p class="section-sub" style="margin-bottom:2rem">Scripts for all 4 products, pre-meeting checklist, and objection handlers &mdash; everything for a tight 60-minute session.</p>
+    <div class="dtabs">
+      <div class="dtab active" onclick="showDash('scripts',this)">Scripts</div>
+      <div class="dtab" onclick="showDash('kindflow',this)">KindFlow Script</div>
+      <div class="dtab" onclick="showDash('checklist',this)">Checklist</div>
+      <div class="dtab" onclick="showDash('objections',this)">Objections</div>
+    </div>
+    <div id="dash-scripts" class="dpanel active">
+      <div class="script-card">
+        <div class="script-hdr"><div class="script-title">Meeting Opening (8:00 PM)</div><div class="script-time">8 minutes</div></div>
+        <div class="script-body">
+          <p><strong>"Good evening Africa Team! Welcome to tonight's income session &mdash; we've got 60 minutes, let's make every one count."</strong></p><br/>
+          <span class="script-cue">PAUSE &mdash; let people say hello, note attendee count</span>
+          <p>"We have [X] people here tonight. You chose to show up &mdash; that already separates you."</p><br/>
+          <p><strong>"Tonight: 4 income streams in 60 minutes:"</strong><br/>"&#128200; UTrading AI &middot; &#8383; Coinverse &middot; &#9670; Eropia DeFi &middot; &#10022; KindFlow"</p><br/>
+          <span class="script-cue">POLL &mdash; "Which product are you here for? Type 1, 2, 3, or 4"</span>
+        </div>
+      </div>
+      <div class="script-card">
+        <div class="script-hdr"><div class="script-title">Closing Script (8:55 PM)</div><div class="script-time">5 minutes</div></div>
+        <div class="script-body">
+          <p><strong>"We've just covered 4 income streams in under one hour. Real products. Real numbers. Real community."</strong></p><br/>
+          <p>"The question now is simple: which one are you starting with tonight?"</p><br/>
+          <span class="script-cue">DROP ALL 4 LINKS simultaneously in chat</span>
+          <p><strong>"Replay goes to the Telegram channel within 24 hours &mdash; t.me/africateamhub. You can also message @Africateambot for any link anytime."</strong></p><br/>
+          <p>"Next session: [Day], [Date] at 8PM EAT. Bring one person. That is how Africa Team grows. God bless &mdash; see you next time."</p>
+        </div>
+      </div>
+    </div>
+    <div id="dash-kindflow" class="dpanel">
+      <div class="script-card">
+        <div class="script-hdr"><div class="script-title">KindFlow Segment &mdash; Standard (8:44 PM)</div><div class="script-time">11 minutes</div></div>
+        <div class="script-body">
+          <p><strong>"Our fourth engine tonight &mdash; KindFlow. And this one is different from everything else."</strong></p><br/>
+          <p>"UTrading is AI signals. Coinverse is crypto earnings. Eropia is DeFi staking. KindFlow is community wealth &mdash; people helping people on the BSC blockchain, with KindCoin as the reward."</p><br/>
+          <span class="script-cue">SHOW &mdash; community screenshot or activity proof</span>
+          <p>"KindCoin can only be mined &mdash; it cannot be bought. Early members who participate earn something that latecomers cannot simply purchase. That is a powerful position."</p><br/>
+          <span class="script-cue">SCREEN SHARE &mdash; open the KindFlow registration link live</span>
+          <p style="word-break:break-all;color:var(--green)">user.kindflow.world/register?sponsor=0x13f93855D5131E0e58eFb9AeB96036ED5a14F077</p><br/>
+          <span class="script-cue">DROP LINK &middot; "Type KINDFLOW and I will personally guide you through setup after this session"</span>
+        </div>
+      </div>
+    </div>
+    <div id="dash-checklist" class="dpanel">
+      <ul class="checklist">
+        <li onclick="toggleCheck(this)"><div class="check-box"></div><div><div class="check-label">Test both Google Meet links: piq-wvnj-hrw (Tue) and etv-grye-hon (Thu)</div><div class="check-phase">48 HRS BEFORE</div></div></li>
+        <li onclick="toggleCheck(this)"><div class="check-box"></div><div><div class="check-label">Send WhatsApp blast with meeting date + Google Meet link</div><div class="check-phase">48 HRS BEFORE</div></div></li>
+        <li onclick="toggleCheck(this)"><div class="check-box"></div><div><div class="check-label">Post invite to t.me/africateamhub with Meet link and all 4 product teasers</div><div class="check-phase">24 HRS BEFORE</div></div></li>
+        <li onclick="toggleCheck(this)"><div class="check-box"></div><div><div class="check-label">Prepare screenshots: UTrading signal, Coinverse earnings, Eropia ROI, KindFlow community stats</div><div class="check-phase">DAY OF</div></div></li>
+        <li onclick="toggleCheck(this)"><div class="check-box"></div><div><div class="check-label">Open all 4 product tabs before session starts</div><div class="check-phase">30 MIN BEFORE</div></div></li>
+        <li onclick="toggleCheck(this)"><div class="check-box"></div><div><div class="check-label">Send 1-hour reminder to WA and Telegram with the correct Google Meet link</div><div class="check-phase">1 HR BEFORE</div></div></li>
+        <li onclick="toggleCheck(this)"><div class="check-box"></div><div><div class="check-label">Start Google Meet recording immediately when session begins</div><div class="check-phase">AT START</div></div></li>
+        <li onclick="toggleCheck(this)"><div class="check-box"></div><div><div class="check-label">Drop each product referral link in chat during its segment</div><div class="check-phase">DURING</div></div></li>
+        <li onclick="toggleCheck(this)"><div class="check-box"></div><div><div class="check-label">Upload replay to Telegram channel within 24 hours</div><div class="check-phase">AFTER</div></div></li>
+        <li onclick="toggleCheck(this)"><div class="check-box"></div><div><div class="check-label">Send follow-up WA message: replay link + all 4 referral links</div><div class="check-phase">AFTER</div></div></li>
+        <li onclick="toggleCheck(this)"><div class="check-box"></div><div><div class="check-label">DM everyone who engaged but didn't confirm sign-up</div><div class="check-phase">AFTER</div></div></li>
+        <li onclick="toggleCheck(this)"><div class="check-box"></div><div><div class="check-label">Share promotional poster for next session via WA Channel + Telegram</div><div class="check-phase">AFTER</div></div></li>
+      </ul>
+    </div>
+    <div id="dash-objections" class="dpanel">
+      <div class="obj-grid">
+        <div class="obj-card"><div class="obj-q">"Is this a scam?"</div><div class="obj-a">"That's exactly why we do live sessions &mdash; so you see the products working in real time, ask questions, and verify before spending a cent. Scams don't hold open weekly meetings and answer every question."</div></div>
+        <div class="obj-card"><div class="obj-q">"I don't have money to start."</div><div class="obj-a">"On UTrading and Coinverse, you can earn from referrals before investing anything. Start by sharing your link. Earn first. Then decide how much you want to commit."</div></div>
+        <div class="obj-card"><div class="obj-q">"I don't understand crypto."</div><div class="obj-a">"You don't need to. These platforms are built for beginners. I walk through setup step by step every session, and the replay is always in Telegram. Watch as many times as you need."</div></div>
+        <div class="obj-card"><div class="obj-q">"What is KindCoin? I've never heard of it."</div><div class="obj-a">"KindCoin is KindFlow's token &mdash; and it can only be mined through participation, never purchased. Being early means you mine what latecomers cannot get. The community is growing now."</div></div>
+        <div class="obj-card"><div class="obj-q">"How do I know I'll make money?"</div><div class="obj-a">"No one can guarantee results &mdash; and anyone who does is lying. What I show you are real records and real members. You decide with your eyes open. That's why we show proof, not just promises."</div></div>
+        <div class="obj-card"><div class="obj-q">"I lost money in crypto before."</div><div class="obj-a">"That experience is valid &mdash; and it's exactly why you should look carefully at what makes this different. Live sessions, no guaranteed-return claims, verifiable products, real community. Take your time. Watch replays first."</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<section id="invites">
+  <div class="section-label">Invite Templates</div>
+  <div class="section-title">Copy-Ready Meeting Invites</div>
+  <p class="section-sub">Update the date and hit send. All 4 products included.</p>
+  <div class="template-grid">
+    <div class="tc">
+      <div class="tmpl-platform">WhatsApp &mdash; 48hrs Before</div>
+      <div class="tmpl-body" id="t1">&#127757; AFRICA TEAM ONLINE MEETING
+&#128197; [DAY], [DATE] &middot; 8:00&ndash;9:00 PM EAT
+
+4 income streams. 1 powerful hour.
+
+&#128200; UTrading AI &mdash; live AI signals
+&#8383; Coinverse &mdash; passive crypto income
+&#9670; Eropia DeFi 4.0 &mdash; staking + NFT
+&#10022; KindFlow &mdash; BSC community earning
+
+&#128279; Join Google Meet:
+meet.google.com/piq-wvnj-hrw (Tuesday)
+meet.google.com/etv-grye-hon (Thursday)
+
+No experience needed. Bring one friend.
+&#129302; Questions anytime: @Africateambot
+&#128226; Updates: t.me/africateamhub</div>
+      <button class="tmpl-copy" onclick="copyT('t1',this)">Copy Message</button>
+    </div>
+    <div class="tc">
+      <div class="tmpl-platform">Telegram &mdash; 1hr Reminder</div>
+      <div class="tmpl-body" id="t2">&#9200; 1 HOUR TO GO &mdash; Africa Team
+
+Starting 8PM EAT sharp. 60 minutes.
+
+Tonight:
+&#9989; UTrading AI signal of the week
+&#9989; Coinverse earning update
+&#9989; Eropia DeFi ROI snapshot
+&#9989; KindFlow community + KindCoin
+
+&#128249; Join now &rarr; meet.google.com/piq-wvnj-hrw
+
+All links dropped in chat during session.
+Bot: @Africateambot for instant links</div>
+      <button class="tmpl-copy" onclick="copyT('t2',this)">Copy Message</button>
+    </div>
+    <div class="tc">
+      <div class="tmpl-platform">WhatsApp &mdash; Post-Meeting Follow-Up</div>
+      <div class="tmpl-body" id="t3">Thank you for joining tonight's Africa Team session! &#128591;
+
+Your links &mdash; all live and working:
+
+&#128200; UTrading AI
+&rarr; utrading.ai/AFRICA
+
+&#8383; Coinverse
+&rarr; coinverse-landing.vercel.app
+
+&#9670; Eropia (Staking)
+&rarr; eropia.finance?ref=AFRICA
+
+&#9670; Eropia (NFT)
+&rarr; eropia.finance?ref=U13F93855
+
+&#10022; KindFlow
+&rarr; user.kindflow.world/register?sponsor=0x13f93855D5131E0e58eFb9AeB96036ED5a14F077
+
+&#128249; Replay: [DROP LINK &mdash; within 24hrs]
+
+Next meeting: [DAY], [DATE] &middot; 8PM EAT
+Questions? Message me or @Africateambot &#129309;</div>
+      <button class="tmpl-copy" onclick="copyT('t3',this)">Copy Message</button>
+    </div>
+    <div class="tc">
+      <div class="tmpl-platform">Telegram &mdash; Replay Drop</div>
+      <div class="tmpl-body" id="t4">&#127916; REPLAY IS LIVE
+
+Missed tonight? Watch it now &#128071;
+[REPLAY LINK]
+
+Covered:
+&#128200; UTrading AI &mdash; live signal demo
+&#8383; Coinverse &mdash; earning walkthrough
+&#9670; Eropia DeFi &mdash; staking + NFT mining
+&#10022; KindFlow &mdash; BSC community + KindCoin
+
+All links inside the video.
+
+Next LIVE: [DAY], [DATE] &middot; 8PM EAT
+&#128226; t.me/africateamhub
+&#129302; @Africateambot for instant product links</div>
+      <button class="tmpl-copy" onclick="copyT('t4',this)">Copy Message</button>
+    </div>
+  </div>
+</section>
+<section id="nextsteps">
+  <div class="section-label">Recommended Next Steps</div>
+  <div class="section-title">What To Do After This Work</div>
+  <p class="section-sub">In priority order &mdash; what delivers results fastest.</p>
+  <div class="steps-grid">
+    <div class="step-card urgent"><div class="step-badge badge-now">DO THIS WEEK</div><div class="step-num">STEP 01</div><div class="step-title">Run Your First Meeting Using This Hub</div><div class="step-body">Use the Presenter Dashboard and built-in 60-min timer. Start with the Standard Session. Record it. The recording becomes your first replay asset and your first repurpose clip for Shorts/Reels.</div></div>
+    <div class="step-card urgent"><div class="step-badge badge-now">DO THIS WEEK</div><div class="step-num">STEP 02</div><div class="step-title">Program @Africateambot with Product Links</div><div class="step-body">The bot is deployed on Railway. Add auto-reply commands: when someone types "kindflow", "utrading", "coinverse", or "eropia", the bot instantly returns the referral link. No more manually sending links.</div></div>
+    <div class="step-card"><div class="step-badge badge-week">THIS MONTH</div><div class="step-num">STEP 03</div><div class="step-title">Automate Invites via n8n</div><div class="step-body">Your n8n instance is running. Build one workflow: auto-send the WA blast and Telegram invite 48hrs and 1hr before every Tuesday and Thursday. The copy is already written &mdash; just wire it up.</div></div>
+    <div class="step-card"><div class="step-badge badge-week">THIS MONTH</div><div class="step-num">STEP 04</div><div class="step-title">Build Landing Pages for UTrading, Eropia &amp; KindFlow</div><div class="step-body">You have a Coinverse landing page. Build equivalent pages for the other 3 products. Each page: one headline, one referral link, one WA CTA. Deploy to Vercel. Use these URLs in all promotions.</div></div>
+    <div class="step-card"><div class="step-badge badge-week">THIS MONTH</div><div class="step-num">STEP 05</div><div class="step-title">Start a Testimonial System</div><div class="step-body">After each meeting, DM every engaged attendee: "What product are you starting with and why?" Screenshot the reply. Open every following session with one fresh testimonial. This is your most powerful conversion tool.</div></div>
+    <div class="step-card"><div class="step-badge badge-month">NEXT 30 DAYS</div><div class="step-num">STEP 06</div><div class="step-title">Turn Replays Into Faceless Videos</div><div class="step-body">Clip the best 3-minute segment from each session. Run it through your ElevenLabs + Pexels + Creatomate pipeline (already configured). Post to TikTok, YouTube Shorts, Instagram Reels &mdash; each one drives new meeting attendees.</div></div>
+    <div class="step-card"><div class="step-badge badge-month">NEXT 30 DAYS</div><div class="step-num">STEP 07</div><div class="step-title">Plan a 4-Week Content Calendar</div><div class="step-body">Week 1=Standard &middot; Week 2=UTrading Focus &middot; Week 3=Coinverse Focus &middot; Week 4=Eropia Focus &middot; Repeat with KindFlow on Thursdays. Predictable schedule builds audience habits and return attendance.</div></div>
+    <div class="step-card"><div class="step-badge badge-month">NEXT 30 DAYS</div><div class="step-num">STEP 08</div><div class="step-title">Deploy This Hub to a Custom Domain</div><div class="step-body">This repo is already on GitHub. Connect it to Vercel as africateam.vercel.app. Share this URL in every invite instead of a long Google Meet link. It becomes your permanent online headquarters.</div></div>
+  </div>
+</section>
+<div class="timer-launch-bar">
+  <button class="btn-primary" onclick="startTimer()" style="font-size:13px;padding:10px 22px">&#9654; Start 60-Min Timer</button>
+  <a class="btn-secondary" href="https://meet.google.com/piq-wvnj-hrw" target="_blank" style="font-size:13px;padding:10px 22px">&#128197; Tuesday Meet</a>
+  <a class="btn-secondary" href="https://meet.google.com/etv-grye-hon" target="_blank" style="font-size:13px;padding:10px 22px">&#128293; Thursday Meet</a>
+  <a class="btn-secondary" href="https://t.me/Africateambot" target="_blank" style="font-size:13px;padding:10px 22px">&#129302; @Africateambot</a>
+</div>
+<div class="live-timer" id="live-timer">
+  <button class="lt-close" onclick="document.getElementById('live-timer').style.display='none';clearInterval(tInt);">&times;</button>
+  <div class="lt-label">CURRENT SEGMENT</div>
+  <div class="lt-seg" id="lt-seg">Welcome &amp; Energy</div>
+  <div class="lt-clock" id="lt-clock">08:00</div>
+  <div class="lt-nxt" id="lt-nxt">Next: UTrading AI</div>
+  <button class="lt-btn" onclick="nextSeg()">Next Segment &rarr;</button>
+</div>
+<footer>
+  <div class="footer-brand">Africa Team</div>
+  <p>Building financial freedom across Africa &mdash; one meeting at a time.</p>
+  <div class="footer-links">
+    <a href="https://wa.me/256784277664" target="_blank">WhatsApp</a>
+    <a href="https://t.me/africateamhub" target="_blank">Telegram Channel</a>
+    <a href="https://t.me/Africateambot" target="_blank">@Africateambot</a>
+    <a href="https://whatsapp.com/channel/0029VaYj81GLSmbe9xU1zh3i" target="_blank">WA Channel</a>
+    <a href="https://coinverse-landing.vercel.app" target="_blank">Coinverse</a>
+    <a href="https://utrading.ai/AFRICA" target="_blank">UTrading</a>
+    <a href="https://user.kindflow.world/register?sponsor=0x13f93855D5131E0e58eFb9AeB96036ED5a14F077" target="_blank">KindFlow</a>
+    <a href="https://meet.google.com/piq-wvnj-hrw" target="_blank">Tue Meet</a>
+    <a href="https://meet.google.com/etv-grye-hon" target="_blank">Thu Meet</a>
+  </div>
+  <p style="margin-top:1.5rem;font-size:11px;opacity:.3">Participation in any of these platforms carries financial risk. Results shown are real but not guaranteed. Always do your own research before investing.</p>
+</footer>
+<script>
+function pad(n){return String(n).padStart(2,'0');}
+function getNext(){
+  const now=new Date();
+  const eat=new Date(now.toLocaleString('en-US',{timeZone:'Africa/Nairobi'}));
+  const day=eat.getDay(),hr=eat.getHours(),mn=eat.getMinutes();
+  for(let i=0;i<=7;i++){
+    const cd=(day+i)%7;
+    if(cd===2||cd===4){
+      if(i===0&&(hr>21||(hr===21&&mn>0)))continue;
+      const next=new Date(eat);next.setDate(next.getDate()+i);next.setHours(20,0,0,0);
+      return new Date(next.getTime()-(eat.getTime()-now.getTime()));
+    }
+  }
+}
+function tick(){
+  const diff=getNext()-new Date();
+  if(diff<=0){tick();return;}
+  document.getElementById('cd-d').textContent=pad(Math.floor(diff/86400000));
+  document.getElementById('cd-h').textContent=pad(Math.floor(diff%86400000/3600000));
+  document.getElementById('cd-m').textContent=pad(Math.floor(diff%3600000/60000));
+  document.getElementById('cd-s').textContent=pad(Math.floor(diff%60000/1000));
+}
+setInterval(tick,1000);tick();
+function showWeek(id,el){
+  document.querySelectorAll('.agenda-grid').forEach(g=>g.style.display='none');
+  document.querySelectorAll('.week-tab').forEach(t=>t.classList.remove('active'));
+  const g=document.getElementById('week-'+id);g.style.display='flex';g.style.flexDirection='column';
+  if(el)el.classList.add('active');
+}
+function showDash(id,el){
+  document.querySelectorAll('.dpanel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.dtab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('dash-'+id).classList.add('active');
+  if(el)el.classList.add('active');
+}
+function toggleCheck(li){li.classList.toggle('done');}
+function copyT(id,btn){
+  navigator.clipboard.writeText(document.getElementById(id).textContent).then(()=>{
+    btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy Message',2000);
+  });
+}
+const SEGS=[
+  {name:'Welcome & Energy',dur:8*60,next:'UTrading AI'},
+  {name:'UTrading AI',dur:14*60,next:'Coinverse'},
+  {name:'Coinverse',dur:11*60,next:'Eropia DeFi 4.0'},
+  {name:'Eropia DeFi 4.0',dur:11*60,next:'KindFlow'},
+  {name:'KindFlow',dur:11*60,next:'Close + Links Drop'},
+  {name:'Close + Links Drop',dur:5*60,next:'Done!'},
+];
+let cur=0,tLeft=0,tInt=null;
+function startTimer(){cur=0;loadSeg(0);document.getElementById('live-timer').style.display='flex';}
+function loadSeg(i){
+  if(i>=SEGS.length){
+    document.getElementById('lt-seg').textContent='&#10003; Meeting Complete';
+    document.getElementById('lt-clock').textContent='--:--';
+    document.getElementById('lt-nxt').textContent='Great session!';
+    clearInterval(tInt);return;
+  }
+  clearInterval(tInt);tLeft=SEGS[i].dur;
+  document.getElementById('lt-seg').textContent=SEGS[i].name;
+  document.getElementById('lt-nxt').textContent='Next: '+SEGS[i].next;
+  render();
+  tInt=setInterval(()=>{tLeft--;render();if(tLeft<=0){clearInterval(tInt);try{const a=new AudioContext();const o=a.createOscillator();o.connect(a.destination);o.frequency.value=523;o.start();o.stop(a.currentTime+.4);}catch(e){}}},1000);
+}
+function render(){
+  const m=Math.floor(tLeft/60),s=tLeft%60;
+  document.getElementById('lt-clock').textContent=pad(m)+':'+pad(s);
+  const r=tLeft/SEGS[cur].dur;
+  document.getElementById('lt-clock').style.color=r<.2?'#E8603C':r<.35?'#FAC775':'#F0A832';
+}
+function nextSeg(){cur++;loadSeg(cur);}
+</script>
+</body>
+</html>
