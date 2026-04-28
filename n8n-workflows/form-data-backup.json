@@ -1,0 +1,143 @@
+{
+  "name": "Africa Team — Form Data Dual Storage (Firebase Mirror)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "africa-team-form",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0001-0001-0001-000000000001",
+      "name": "Webhook — Receive Form Data",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "africa-team-form"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Normalize incoming data regardless of source (Firebase, direct POST, etc.)\nconst body = $input.first().json.body || $input.first().json;\n\nconst normalized = {\n  timestamp: new Date().toISOString(),\n  name: body.name || body.fullName || body.displayName || 'Unknown',\n  email: body.email || body.emailAddress || '',\n  phone: body.phone || body.phoneNumber || body.whatsapp || '',\n  product_interest: body.product || body.productInterest || body.interest || 'Not specified',\n  message: body.message || body.notes || '',\n  source: body.source || body.referrer || 'Website Form',\n  ip: $input.first().json.headers?.['x-forwarded-for'] || '',\n  raw: JSON.stringify(body)\n};\n\nreturn [{ json: normalized }];"
+      },
+      "id": "a1b2c3d4-0002-0002-0002-000000000002",
+      "name": "Normalize Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID_HERE",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Form Submissions",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $json.timestamp }}",
+            "Name": "={{ $json.name }}",
+            "Email": "={{ $json.email }}",
+            "Phone": "={{ $json.phone }}",
+            "Product Interest": "={{ $json.product_interest }}",
+            "Message": "={{ $json.message }}",
+            "Source": "={{ $json.source }}",
+            "Raw Data": "={{ $json.raw }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "a1b2c3d4-0003-0003-0003-000000000003",
+      "name": "Google Sheets — Backup",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [680, 180]
+    },
+    {
+      "parameters": {
+        "chatId": "-1001234567890",
+        "text": "=🔔 *New Form Submission — Africa Team*\n\n👤 *Name:* {{ $json.name }}\n📧 *Email:* {{ $json.email }}\n📱 *Phone:* {{ $json.phone }}\n🎯 *Interest:* {{ $json.product_interest }}\n💬 *Message:* {{ $json.message }}\n🌐 *Source:* {{ $json.source }}\n🕒 *Time:* {{ $json.timestamp }}\n\n_Dual-stored in Firebase + Google Sheets ✅_",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "a1b2c3d4-0004-0004-0004-000000000004",
+      "name": "Telegram — Notify Coach",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [680, 420],
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_TELEGRAM_CREDENTIAL_ID",
+          "name": "AfricaTeamBot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ success: true, message: 'Data received and stored', timestamp: $('Normalize Data').first().json.timestamp }) }}",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0005-0005-0005-000000000005",
+      "name": "Respond OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [900, 300]
+    }
+  ],
+  "connections": {
+    "Webhook — Receive Form Data": {
+      "main": [
+        [
+          {
+            "node": "Normalize Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Data": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets — Backup",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Telegram — Notify Coach",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets — Backup": {
+      "main": [
+        [
+          {
+            "node": "Respond OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "pinData": {}
+}
